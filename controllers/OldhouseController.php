@@ -20,7 +20,7 @@ class OldhouseController extends Controller
    {
    		$house_id = $_REQUEST['house_id'];
    		
-   		$sql = "select spider_date,price from t_ershoufang_house where house_id=\"{$house_id}\" order by create_time";
+   		$sql = "select spider_date,price,view_count from t_ershoufang_house where house_id=\"{$house_id}\" order by create_time";
    		
    		$ret = Yii::$app->db->createCommand($sql)->queryAll();
    		
