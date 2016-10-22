@@ -22,7 +22,17 @@ class OldhouseController extends Controller
    		
    		$sql = "select spider_date,price from t_ershoufang_house where house_id=\"{$house_id}\" order by create_time";
    		
-   		$data = Yii::$app->db->createCommand($sql)->queryAll();
+   		$ret = Yii::$app->db->createCommand($sql)->queryAll();
+   		
+   		$data = array();
+   		foreach($ret as $house_info)
+   		{
+   			$data[] = array(
+   				"name"	=> $house_info['spider_date'],
+   				"value"	=> array($house_info['spider_date'], $house_info['price']),
+   			);
+   		}
+   		
    		/*
    		$data = array(
    			array(
