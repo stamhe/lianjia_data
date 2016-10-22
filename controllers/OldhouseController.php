@@ -60,6 +60,55 @@ class OldhouseController extends Controller
    		build_return(0, "成功", $data);
    }
    
+   function actionChenshi()
+   {
+   		return $this->renderPartial("chenshi");
+   }
+   
+   function actionGetdatabychenshiname()
+   {
+	   	$chenshi_name = $_REQUEST['chenshi_name'];
+	   	 
+	   	$sql = "select * from t_ershoufang_chenshi where chenshi_name=\"{$chenshi_name}\" order by create_time";
+	   	 
+	   	$ret = Yii::$app->db->createCommand($sql)->queryAll();
+	   	 
+	   	$price_list = array();
+	   	$view_list	= array();
+	   	foreach($ret as $house_info)
+	   	{
+	   		$price_list[] = array(
+	   				"name"	=> $house_info['spider_date'],
+	   				"value"	=> array($house_info['spider_date'], $house_info['price']),
+	   		);
+	   
+	   		$view_list[]	= array(
+	   				"name"	=> $house_info['spider_date'],
+	   				"value"	=> array($house_info['spider_date'], $house_info['view_count']),
+	   		);
+	   	}
+	   	 
+	   	/*
+	   	 $data = array(
+	   	 		array(
+	   	 				'name'	=> '2016-10-01',
+	   	 				'value'	=> array('2016-10-01', 101),
+	   	 		),
+	   	 		array(
+	   	 				'name'	=> '2016-10-02',
+	   	 				'value'	=> array('2016-10-02', 101),
+	   	 		),
+	   	 );
+	   	*/
+	   	 
+	   	$data = array(
+	   			'price'		=> $price_list,
+	   			'view'		=> $view_list,
+	   	);
+	   	 
+	   	build_return(0, "成功", $data);
+   }
+   
    function actionParam($a = "a1", $b = "b1")
    {
    		var_dump($a);
