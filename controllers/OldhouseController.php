@@ -9,7 +9,152 @@ use yii\filters\VerbFilter;
 
 class OldhouseController extends Controller
 {
+    private $legend_city = array('杭州', '深圳', '成都', '厦门', '广州', '南京', '武汉', '北京', '重庆');
 	public $enableCsrfValidation = false;
+
+   function actionChenshi()
+   {
+	   	$sql = "select * from t_ershoufang_chenshi order by create_time";
+	   	$alldata = Yii::$app->db->createCommand($sql)->queryAll();
+
+        $data = array();
+        $data['legend'] = $this->legend_city;
+
+        // 每日在售房源数量
+        $onsale_count_xaxis_arr = array();
+        $sql1 = "select spider_date from t_ershoufang_chenshi where chenshi_name=\"{$this->legend_city[0]}\" order by spider_date asc";
+        $ret1 = Yii::$app->db->createCommand($sql1)->queryAll();
+        foreach($ret1 as $v)
+        {
+            $onsale_count_xaxis_arr[] = $v['spider_date'];
+        }
+
+        $onsale_count_series_arr = array();
+        foreach($this->legend_city as $chenshi_name)
+        {
+            $sql2 = "select onsale_count from t_ershoufang_chenshi where chenshi_name=\"{$chenshi_name}\" order by spider_date asc";
+            $ret2 = Yii::$app->db->createCommand($sql2)->queryAll();
+            $tmp_arr = array();
+            foreach($ret2 as $v)
+            {
+                $tmp_arr[] = $v['onsale_count'];
+            }
+
+            $onsale_count_series_arr[] = array(
+                'name'  => $chenshi_name,
+                'type'  => 'line',
+                'stack' => '总量',
+                'data'  => $tmp_arr,
+            );
+        }
+
+        $data['onsale_count'] = array(
+            'xaxis'     => $onsale_count_xaxis_arr,
+            'series'    => $onsale_count_series_arr,
+        );
+
+
+        // 每日看房人次趋势
+        $view_last_day_xaxis_arr = array();
+        $sql1 = "select spider_date from t_ershoufang_chenshi where chenshi_name=\"{$this->legend_city[0]}\" order by spider_date asc";
+        $ret1 = Yii::$app->db->createCommand($sql1)->queryAll();
+        foreach($ret1 as $v)
+        {
+            $view_last_day_xaxis_arr[] = $v['spider_date'];
+        }
+
+        $view_last_day_series_arr = array();
+        foreach($this->legend_city as $chenshi_name)
+        {
+            $sql2 = "select view_last_day from t_ershoufang_chenshi where chenshi_name=\"{$chenshi_name}\" order by spider_date asc";
+            $ret2 = Yii::$app->db->createCommand($sql2)->queryAll();
+            $tmp_arr = array();
+            foreach($ret2 as $v)
+            {
+                $tmp_arr[] = $v['view_last_day'];
+            }
+
+            $view_last_day_series_arr[] = array(
+                'name'  => $chenshi_name,
+                'type'  => 'line',
+                'stack' => '总量',
+                'data'  => $tmp_arr,
+            );
+        }
+
+        $data['view_last_day'] = array(
+            'xaxis'     => $view_last_day_xaxis_arr,
+            'series'    => $view_last_day_series_arr,
+        );
+
+        // 城市月平均房价趋势
+        $avg_price_xaxis_arr = array();
+        $sql1 = "select spider_date from t_ershoufang_chenshi where chenshi_name=\"{$this->legend_city[0]}\" order by spider_date asc";
+        $ret1 = Yii::$app->db->createCommand($sql1)->queryAll();
+        foreach($ret1 as $v)
+        {
+            $avg_price_xaxis_arr[] = $v['spider_date'];
+        }
+
+        $avg_price_series_arr = array();
+        foreach($this->legend_city as $chenshi_name)
+        {
+            $sql2 = "select avg_price from t_ershoufang_chenshi where chenshi_name=\"{$chenshi_name}\" order by spider_date asc";
+            $ret2 = Yii::$app->db->createCommand($sql2)->queryAll();
+            $tmp_arr = array();
+            foreach($ret2 as $v)
+            {
+                $tmp_arr[] = $v['avg_price'];
+            }
+
+            $avg_price_series_arr[] = array(
+                'name'  => $chenshi_name,
+                'type'  => 'line',
+                'stack' => '总量',
+                'data'  => $tmp_arr,
+            );
+        }
+
+        $data['avg_price'] = array(
+            'xaxis'     => $avg_price_xaxis_arr,
+            'series'    => $avg_price_series_arr,
+        );
+
+        // 城市月成交房屋套数趋势
+        $sold_last_month_xaxis_arr = array();
+        $sql1 = "select spider_date from t_ershoufang_chenshi where chenshi_name=\"{$this->legend_city[0]}\" order by spider_date asc";
+        $ret1 = Yii::$app->db->createCommand($sql1)->queryAll();
+        foreach($ret1 as $v)
+        {
+            $sold_last_month_xaxis_arr[] = $v['spider_date'];
+        }
+
+        $sold_last_month_series_arr = array();
+        foreach($this->legend_city as $chenshi_name)
+        {
+            $sql2 = "select sold_last_month from t_ershoufang_chenshi where chenshi_name=\"{$chenshi_name}\" order by spider_date asc";
+            $ret2 = Yii::$app->db->createCommand($sql2)->queryAll();
+            $tmp_arr = array();
+            foreach($ret2 as $v)
+            {
+                $tmp_arr[] = $v['sold_last_month'];
+            }
+
+            $sold_last_month_series_arr[] = array(
+                'name'  => $chenshi_name,
+                'type'  => 'line',
+                'stack' => '总量',
+                'data'  => $tmp_arr,
+            );
+        }
+
+        $data['sold_last_month'] = array(
+            'xaxis'     => $sold_last_month_xaxis_arr,
+            'series'    => $sold_last_month_series_arr,
+        );
+
+   		return $this->renderPartial("chenshi", array('data' => $data));
+   }
 	
    function actionOnehouse()
    {
@@ -60,10 +205,6 @@ class OldhouseController extends Controller
    		build_return(0, "成功", $data);
    }
    
-   function actionChenshi()
-   {
-   		return $this->renderPartial("chenshi");
-   }
    
    function actionGetdatabychenshiname()
    {
