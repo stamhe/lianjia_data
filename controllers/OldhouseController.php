@@ -24,12 +24,18 @@ class OldhouseController extends Controller
    		
    		$ret = Yii::$app->db->createCommand($sql)->queryAll();
    		
-   		$data = array();
+   		$price_list = array();
+   		$view_list	= array();
    		foreach($ret as $house_info)
    		{
-   			$data[] = array(
+   			$price_list[] = array(
    				"name"	=> $house_info['spider_date'],
    				"value"	=> array($house_info['spider_date'], $house_info['price']),
+   			);
+   			
+   			$view_list[]	= array(
+   				"name"	=> $house_info['spider_date'],
+   				"value"	=> array($house_info['spider_date'], $house_info['view_count']),
    			);
    		}
    		
@@ -43,28 +49,13 @@ class OldhouseController extends Controller
    				'name'	=> '2016-10-02',
    				'value'	=> array('2016-10-02', 101),
    			),
-   			array(
-   				'name'	=> '2016-10-03',
-   				'value'	=> array('2016-10-03', 101),
-   			),
-   			array(
-   				'name'	=> '2016-10-04',
-   				'value'	=> array('2016-10-04', 110),
-   			),
-   			array(
-   				'name'	=> '2016-10-05',
-   				'value'	=> array('2016-10-05', 110),
-   			),
-   			array(
-   				'name'	=> '2016-10-06',
-   				'value'	=> array('2016-10-06', 110),
-   			),
-   			array(
-   				'name'	=> '2016-10-07',
-   				'value'	=> array('2016-10-07', 110),
-   			),
    		);
    		*/
+   		
+   		$data = array(
+   			'price'		=> $price_list,
+   			'view'		=> $view_list,
+   		);
    		
    		build_return(0, "成功", $data);
    }

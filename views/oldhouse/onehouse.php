@@ -10,11 +10,13 @@
         房源id：<input type="text" id="house_id" value="" size="50" /><input id="btn_house_id" type="button" value="提交" /><br />
 		
 		<!-- 为Echarts 准备一个具体大小(宽高)的DOM -->
-		<div id="main" style="width: 600px; height: 400px;"></div>
+		<div id="onehouse_price" style="width: 800px; height: 400px;"></div><br />
+        <div id="onehouse_view" style="width: 800px; height: 400px;"></div><br />
 	</body>
     <script type="text/javascript">
     	
-        var myEchart = echarts.init(document.getElementById("main"));
+        var echarts_onehouse_price = echarts.init(document.getElementById("onehouse_price"));
+        var echarts_onehouse_view   = echarts.init(document.getElementById("onehouse_view"));
 		var data = "";
 			
         $(document).ready(function(){
@@ -52,10 +54,11 @@
 							return;
 						}
 						
-						data = rsp.data;
+						price_data    = rsp.data.price;
+						view_data     = rsp.data.view;
 						
 		                /* 指定图表的配置项和数据 */
-		                var options = {
+		                var options_price = {
 		                    title: {
 		                        text: "单一房源价格走势"
 		                    },
@@ -83,16 +86,53 @@
 		                        }
 		                    },
 		                    series: [{
-		                        name: '房源数据',
+		                        name: '房源价格数据',
 		                        type: 'line',
 		                        showSymbol: false,
 		                        hoverAnimation: false,
-		                        data: data
+		                        data: price_data
 		                    }]
 		                };
+						
+						var options_view = {
+                            title: {
+                                text: "单一房源看房量走势"
+                            },
+                            tooltip: {
+                                trigger: 'axis',
+                                formatter: function(params) {
+                                    params = params[0];
+                                    return params.name + ":" + params.value[1];
+                                },
+                                axisPointer: {
+                                    animation: false
+                                }
+                            },
+                            xAxis: {
+                                type: 'time',
+                                splitLine: {
+                                    show: true
+                                }
+                            },
+                            yAxis: {
+                                type: 'value',
+                                boundaryGap: [0, '100%'],
+                                splitLine: {
+                                    show: true
+                                }
+                            },
+                            series: [{
+                                name: '房源看房量',
+                                type: 'line',
+                                showSymbol: false,
+                                hoverAnimation: false,
+                                data: view_data
+                            }]
+                        };
 		                
 		                /* 使用刚指定的配置项和数据显示图表*/
-		                myEchart.setOption(options);
+		                echarts_onehouse_price.setOption(options_price);
+                        echarts_onehouse_view.setOption(options_view);
 					},
 					'json'
 				);
