@@ -13,8 +13,11 @@
 		<div id="main" style="width: 600px; height: 400px;"></div>
 	</body>
     <script type="text/javascript">
+    	
+        var myEchart = echarts.init(document.getElementById("main"));
+		var data = "";
+			
         $(document).ready(function(){
-            var myEchart = echarts.init(document.getElementById("main"));
 			
             $("#btn_house_id").click(function(){
 				
@@ -23,7 +26,7 @@
 					alert("house_id不能为空");
 					return;
 				}
-				
+				/*
                 data = [
                     {
                         name: '2016-10-01',
@@ -33,19 +36,8 @@
                         name: '2016-10-02',
                         value: ['2016-10-02', 102]
                     },
-                    {
-                        name: '2016-10-03',
-                        value: ['2016-10-03', 103]
-                    },
-                    {
-                        name: '2016-10-04',
-                        value: ['2016-10-04', 104]
-                    },
-                    {
-                        name: '2016-10-05',
-                        value: ['2016-10-05', 105]
-                    }
                 ];
+                */
 				
 				
 				$.post(
@@ -55,51 +47,57 @@
 					},
 					function(rsp)
 					{
+						if(rsp.code != 0) {
+							alert(rsp.msg);
+							return;
+						}
 						
+						data = rsp.data;
+						
+		                /* 指定图表的配置项和数据 */
+		                var options = {
+		                    title: {
+		                        text: "单一房源价格走势"
+		                    },
+		                    tooltip: {
+		                        trigger: 'axis',
+		                        formatter: function(params) {
+		                            params = params[0];
+		                            return params.name + ":" + params.value[1];
+		                        },
+		                        axisPointer: {
+		                            animation: false
+		                        }
+		                    },
+		                    xAxis: {
+		                        type: 'time',
+		                        splitLine: {
+		                            show: true
+		                        }
+		                    },
+		                    yAxis: {
+		                        type: 'value',
+		                        boundaryGap: [0, '100%'],
+		                        splitLine: {
+		                            show: true
+		                        }
+		                    },
+		                    series: [{
+		                        name: '房源数据',
+		                        type: 'line',
+		                        showSymbol: false,
+		                        hoverAnimation: false,
+		                        data: data
+		                    }]
+		                };
+		                
+		                /* 使用刚指定的配置项和数据显示图表*/
+		                myEchart.setOption(options);
 					},
 					'json'
 				);
 				
 				
-                /* 指定图表的配置项和数据 */
-                var options = {
-                    title: {
-                        text: "单一房源价格走势"
-                    },
-                    tooltip: {
-                        trigger: 'axis',
-                        formatter: function(params) {
-                            params = params[0];
-                            return params.name + ":" + params.value[1];
-                        },
-                        axisPointer: {
-                            animation: false
-                        }
-                    },
-                    xAxis: {
-                        type: 'time',
-                        splitLine: {
-                            show: true
-                        }
-                    },
-                    yAxis: {
-                        type: 'value',
-                        boundaryGap: [0, '100%'],
-                        splitLine: {
-                            show: true
-                        }
-                    },
-                    series: [{
-                        name: '房源数据',
-                        type: 'line',
-                        showSymbol: false,
-                        hoverAnimation: false,
-                        data: data
-                    }]
-                };
-				
-				/* 使用刚指定的配置项和数据显示图表*/
-				myEchart.setOption(options);
             });
 			
         });

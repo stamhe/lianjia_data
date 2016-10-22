@@ -9,6 +9,8 @@ use yii\filters\VerbFilter;
 
 class OldhouseController extends Controller
 {
+	public $enableCsrfValidation = false;
+	
    function actionOnehouse()
    {
    		return $this->renderPartial("onehouse");
@@ -20,9 +22,41 @@ class OldhouseController extends Controller
    		
    		$sql = "select spider_date,price from t_ershoufang_house where house_id=\"{$house_id}\" order by create_time";
    		
-   		$house_list = Yii::$app->db->createCommand($sql)->queryAll();
+   		$data = Yii::$app->db->createCommand($sql)->queryAll();
+   		/*
+   		$data = array(
+   			array(
+   				'name'	=> '2016-10-01',
+   				'value'	=> array('2016-10-01', 101),
+   			),
+   			array(
+   				'name'	=> '2016-10-02',
+   				'value'	=> array('2016-10-02', 101),
+   			),
+   			array(
+   				'name'	=> '2016-10-03',
+   				'value'	=> array('2016-10-03', 101),
+   			),
+   			array(
+   				'name'	=> '2016-10-04',
+   				'value'	=> array('2016-10-04', 110),
+   			),
+   			array(
+   				'name'	=> '2016-10-05',
+   				'value'	=> array('2016-10-05', 110),
+   			),
+   			array(
+   				'name'	=> '2016-10-06',
+   				'value'	=> array('2016-10-06', 110),
+   			),
+   			array(
+   				'name'	=> '2016-10-07',
+   				'value'	=> array('2016-10-07', 110),
+   			),
+   		);
+   		*/
    		
-   		var_dump($house_list);
+   		build_return(0, "成功", $data);
    }
    
    function actionParam($a = "a1", $b = "b1")
