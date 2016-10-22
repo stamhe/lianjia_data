@@ -12,6 +12,8 @@ use app\models\Country;
 
 class TestController extends Controller
 {
+// 	public $layout = false;
+	
    function actionTest1()
    {
    		echo "test-test1";
@@ -37,5 +39,13 @@ class TestController extends Controller
    function actionLog()
    {
    		Yii::info("info test");
+   }
+   
+   function actionView()
+   {
+   		$message = "Hello World";
+   		// 渲染一个名为say的视图文件, message参数也被传入视图
+//    		return $this->render("say", ['message' => $message]);
+		return $this->renderPartial('say', array("message" => $message));
    }
 }

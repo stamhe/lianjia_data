@@ -2,4 +2,4 @@
 use yii\helpers\Html;
 ?>
 
-<?php echo Html::encode($message); ?>
+<?php echo $message; ?>
