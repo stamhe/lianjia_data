@@ -26,6 +26,7 @@ USE `lianjia`;
 --
 -- Table structure for table `t_ershoufang_chenshi`
 --
+set names utf8;
 
 DROP TABLE IF EXISTS `t_ershoufang_chenshi`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
